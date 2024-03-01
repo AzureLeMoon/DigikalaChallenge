@@ -163,7 +163,7 @@ sudo systemctl enable bird
 
 The bird router is configured by introducing the `edge` server as a neighbor and specifying the Network interfaces to use and then exporting these routes into system routes. packet forwarding between interfaces also needs to be enabled using `sysctl -w net.ipv4.ip_forward=1`
 
-Wwe run this script in our vagrant file using the shell provisioner
+We run this script in our vagrant file using the shell provisioner
 ```ruby
     edge.vm.provision "bird install and start", type: "shell", path: "Inventory/edge/bird_install_run_Edge.sh"
 ```

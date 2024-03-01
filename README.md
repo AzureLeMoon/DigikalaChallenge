@@ -105,7 +105,7 @@ This part is simple we are going to be using apache to host a simple website and
   SHELL
 ```
 
-We copy the files to the VM using vagrant provisioning and install and setup the website using the buitlin `SHELL` provisioner
+We copy the files to the VM using vagrant provisioning and install and setup the website using the builtin `SHELL` provisioner
 
 ### 1.2.2. Step 2 : BGP routing
 
@@ -161,7 +161,7 @@ sudo systemctl restart bird
 sudo systemctl enable bird
 ```
 
-The bird router is configured by introducing the `edge` server as a neighbor and specifiying the Network interfaces to use and then exporting these routes into system routes. packet forwarding between interfaces also needs to be enabled using `sysctl -w net.ipv4.ip_forward=1`
+The bird router is configured by introducing the `edge` server as a neighbor and specifying the Network interfaces to use and then exporting these routes into system routes. packet forwarding between interfaces also needs to be enabled using `sysctl -w net.ipv4.ip_forward=1`
 
 Wwe run this script in our vagrant file using the shell provisioner
 ```ruby
@@ -235,10 +235,10 @@ server {
   }
 }
 ```
-We are using the builtin caching capabilites of nginx to cache our static content.  
+We are using the builtin caching capabilities of nginx to cache our static content.  
 In this config we cache requests with status code 200 for 60 minutes and our cache stays around for either 24 hours to when it reaches 1 gigabyte whichever comes first.
 
-also using the buitlin rate limiter we are limiting requests to `10r/s` and returning status code `429` for those exceeding the limit.
+also using the builtin rate limiter we are limiting requests to `10r/s` and returning status code `429` for those exceeding the limit.
 
 some extra headers including `servername` , `cache status` and `response time` are being passed as well.
 
@@ -268,7 +268,7 @@ and add this to our vagrant file :
 
 ### 1.2.4. Step 4 : ELK stack
 
-For our logger VM as said before we are using a box with `elasticsearch` and `kibana` already setup however there are some modifications need to made including installing LogStash to indice our incoming logs.
+For our logger VM as said before we are using a box with `elasticsearch` and `kibana` already setup however there are some modifications need to be made including installing LogStash to indice our incoming logs.
 
 here is the kibana configuration:
 
@@ -500,12 +500,12 @@ output.logstash:
  this can be done by changing values for different sysctl parameters like
  `net.core.rmem_max`, `net.core.wmem_max`, `net.ipv4.tcp_rmem`, and `net.ipv4.tcp_wmem`
 
- which are the buffer sizes for our tcp stack, we can increase these on our edge server for better handling of through put specially in 40G+ networks.
+ which are the buffer sizes for our tcp stack, we can increase these on our edge server for better handling of through put especially in 40G+ networks.
 
  we could also change the congestion algorithm by changing `net.ipv4.tcp_congestion_control`
 using different algorithms like bbr could help with high concurrent connections
 
-`net.ipv4.tcp_fin_timeout` for socket holds and increasing  `net.ipv4.ip_local_port_range` can help with outbound connections not being stuck waiting for an empty port aswell
+`net.ipv4.tcp_fin_timeout` for socket holds and increasing  `net.ipv4.ip_local_port_range` can help with outbound connections not being stuck waiting for an empty port as well.
 
 
 #### 1.2.5.2. Cache purge
@@ -530,7 +530,7 @@ echo "File $1 has been purged from cache."
 here we can use a simple solution which is limited and can be improved significantly however for the scope of this challenge we could use the following solution:
 
 
-we will use the flask library from python and set it up behind nginx as the webserver to forward requets to( hence `http://localhost:5000`) and use the token bucket algorithm to discard 20% of the requets randomly:
+we will use the flask library from python and set it up behind nginx as the webserver to forward requests to( hence `http://localhost:5000`) and use the token bucket algorithm to discard 20% of the requests randomly:
 
 ```python
 import time
@@ -580,7 +580,7 @@ if __name__ == '__main__':
 ```
 
 
-which proccesses the requests and return 429 status codes whenever we exceed a certain adjustable limit.
+which processes the requests and return 429 status codes whenever we exceed a certain adjustable limit.
 
 we can use the following scripts for generating the load as well:
 
@@ -629,7 +629,7 @@ with ThreadPoolExecutor(max_workers=100) as executor:
 
 #### 1.2.5.4. ELK ILM
 
-we can define index lifecycle policies on our indices to rotate these our after a certain size or amout of time has passsed, for example setting the included `logs` ILP ensures our indices are rotated after 30 Days or 50 GBs.
+we can define index lifecycle policies on our indices to rotate these our after a certain size or amount of time has passsed, for example setting the included `logs` ILP ensures our indices are rotated after 30 Days or 50 GBs.
 
 
 

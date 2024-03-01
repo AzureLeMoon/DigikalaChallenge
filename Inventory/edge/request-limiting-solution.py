@@ -6,12 +6,24 @@ from flask import Flask, request, abort, Response
 app = Flask(__name__)
 
 # Token bucket settings
-capacity = 1000  # maximum number of tokens
-refill_rate = 200  # tokens per second
+capacity = 100  # maximum number of tokens
+refill_rate = 5  # tokens per second
 tokens = capacity
+last_refill_time = time.time()
 
 # Backend webserver settings
 backend_url = 'http://192.168.30.3'
+
+def refill_tokens():
+    global tokens, last_refill_time
+    current_time = time.time()
+    elapsed_time = current_time - last_refill_time
+    tokens = min(capacity, tokens + refill_rate * elapsed_time)
+    last_refill_time = current_time
+
+@app.before_request
+def before_request():
+    refill_tokens()
 
 @app.route('/', methods=['GET'])
 def handle_request():
@@ -24,9 +36,6 @@ def handle_request():
         # No token available, discard the request with 20% probability
         if random() < 0.2:
             abort(429)  # Too Many Requests
-
-    # Refill tokens
-    tokens = min(capacity, tokens + refill_rate * (time.time() - request.start_time))
 
     # Forward the request to the backend webserver
     backend_response = requests.get(backend_url, headers=request.headers)

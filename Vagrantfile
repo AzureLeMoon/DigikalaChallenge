@@ -1,11 +1,15 @@
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "hashicorp/bionic64"
+  config.vm.box = "ubuntu/bionic64"
 
   config.vm.define "client" do |client|
     #client.vm.box="generic/ubuntu1804"
     client.vm.hostname = "client"
     client.vm.network "private_network", ip: "192.168.10.2", virtualbox__intnet: "net1"
+
+    client.vm.provision "file", source: "Inventory/client/load-generator-concurrent.py", destination: "/tmp/load-generator-concurrent.py"
+    client.vm.provision "file", source: "Inventory/client/load-generator.py", destination: "/tmp/load-generator.py"
+
 
     $script = <<-SCRIPT
     sudo apt-get update
@@ -13,6 +17,8 @@ Vagrant.configure("2") do |config|
     sudo apt-get install -y traceroute
 
     sudo ip route add 192.168.20.0/24 via 192.168.10.3 dev enp0s8
+
+    python3 /tmp/load-generator.py
     SCRIPT
 
     client.vm.provision "traceroute", type: "shell", inline: $script

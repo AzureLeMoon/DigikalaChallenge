@@ -8,7 +8,7 @@ sudo cp /tmp/nginx.yml /etc/filebeat/modules.d/nginx.yml
 
 sudo cp /tmp/system.yml /etc/filebeat/modules.d/system.yml
 
-sudo filebeat setup --dashboards -e
+#sudo filebeat setup --dashboards -e
 
 sudo systemctl restart filebeat
 

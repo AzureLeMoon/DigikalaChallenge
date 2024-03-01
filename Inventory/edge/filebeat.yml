@@ -4,10 +4,10 @@ filebeat.config.modules:
 
   reload.enabled: false
 
-setup.dashboards.enabled: true
+#setup.dashboards.enabled: true
 
-setup.kibana:
-  host: "192.168.30.4:5601"
+#setup.kibana:
+  #host: "192.168.30.4:5601"
 
 output.logstash:
   hosts: ['192.168.30.4:5044']

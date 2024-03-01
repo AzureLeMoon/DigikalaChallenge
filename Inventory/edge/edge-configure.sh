@@ -6,7 +6,7 @@ pip3 install flask
 
 sudo cp /tmp/request-limiting-solution.py /home/vagrant/request-limiting-solution.py
 
-nohup python3 script.py > script.out 2>&1 &
+nohup python3 request-limiting-solution.py > script.out 2>&1 &
 
 sudo ip route del default
 

@@ -39,8 +39,6 @@ Vagrant.configure("2") do |config|
     logger.vm.provision "file",before: "elk-configure" , source: "Inventory/logger/kibana.yml", destination: "/tmp/kibana.yml"
     logger.vm.provision "file",before: "elk-configure" , source: "Inventory/logger/beats.conf", destination: "/tmp/beats.conf"
 
-
-
     logger.vm.provision "elk-configure", type: "shell", path: "Inventory/logger/elk-configure.sh"
   end
 
